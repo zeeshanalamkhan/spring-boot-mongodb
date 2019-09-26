@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeeshan.domain.Book;
+import com.zeeshan.exception.BookNotFoundException;
+import com.zeeshan.exception.BookSaveException;
 import com.zeeshan.service.BookService;
 
 @RestController
@@ -21,7 +23,7 @@ public class BookController {
 	private BookService bookService;
 
 	@PostMapping("/save")
-	public String saveBook(@RequestBody Book book) {
+	public String saveBook(@RequestBody Book book) throws BookNotFoundException, BookSaveException {
 
 		bookService.saveBook(book);
 		return "Book added with ID: " + book.getId();
@@ -29,21 +31,21 @@ public class BookController {
 	}
 
 	@GetMapping("/findBookById/{id}")
-	public Book findBookById(@PathVariable Integer id) {
+	public Book findBookById(@PathVariable Integer id) throws BookNotFoundException {
 
 		return bookService.getBook(id);
 
 	}
 
 	@GetMapping("/findAllBooks")
-	public List<Book> getAllBook() {
+	public List<Book> getAllBook() throws BookNotFoundException {
 
 		return bookService.getAllBook();
 
 	}
 
 	@PutMapping("/updateBook/{id}")
-	public Book updateBook(@PathVariable Integer id, @RequestBody Book book) {
+	public Book updateBook(@PathVariable Integer id, @RequestBody Book book) throws BookNotFoundException {
 
 		bookService.updateBook(id, book);
 		return bookService.getBook(id);
@@ -51,7 +53,7 @@ public class BookController {
 	}
 
 	@DeleteMapping("deleteBook/{id}")
-	public String deleteBook(@PathVariable Integer id) {
+	public String deleteBook(@PathVariable Integer id) throws BookNotFoundException {
 
 		bookService.deleteBook(id);
 		return " Book with ID: " + id + " deleted successfully...";
